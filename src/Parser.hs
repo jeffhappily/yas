@@ -2,12 +2,10 @@
 
 module Parser where
 
-import           Control.Applicative   hiding ((<|>))
 import           Data.Functor.Identity (Identity)
 import qualified Data.Text             as T
 import           LispVal
 import           Text.Parsec
-import           Text.Parsec.Expr
 import qualified Text.Parsec.Language  as Lang
 import           Text.Parsec.Text
 import qualified Text.Parsec.Token     as Tok
@@ -20,14 +18,14 @@ lexer = Tok.makeTokenParser style
 style :: Tok.GenLanguageDef T.Text () Identity
 style =
   Lang.emptyDef
-    { Tok.commentStart = "{-",
-      Tok.commentEnd = "-}",
-      Tok.commentLine = "--",
-      Tok.opStart = Tok.opLetter style,
-      Tok.opLetter = oneOf ":!#$%%&*+./<=>?@\\^|-~",
-      Tok.identStart = letter <|> oneOf "-+/*=|&><",
-      Tok.identLetter = digit <|> letter <|> oneOf "?+=|&-/",
-      Tok.reservedOpNames = ["'", "\""]
+    { Tok.commentStart = "{-"
+    , Tok.commentEnd = "-}"
+    , Tok.commentLine = "--"
+    , Tok.opStart = Tok.opLetter style
+    , Tok.opLetter = oneOf ":!#$%%&*+./<=>?@\\^|-~"
+    , Tok.identStart = letter <|> oneOf "-+/*=|&><"
+    , Tok.identLetter = digit <|> letter <|> oneOf "?+=|&-/"
+    , Tok.reservedOpNames = ["'", "\""]
     }
 
 m_parens :: ParsecT T.Text () Identity a -> ParsecT T.Text () Identity a
@@ -89,12 +87,13 @@ parseReserved =
 
 parseExpr :: Parser LispVal
 parseExpr =
-  parseReserved <|> parseNumber
-    <|> try parseNegNum
-    <|> parseAtom
-    <|> parseText
-    <|> parseQuote
-    <|> parseSExp
+      parseReserved
+  <|> parseNumber
+  <|> try parseNegNum
+  <|> parseAtom
+  <|> parseText
+  <|> parseQuote
+  <|> parseSExp
 
 contents :: Parser a -> Parser a
 contents p = do
