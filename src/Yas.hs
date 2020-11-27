@@ -1,6 +1,9 @@
-module Yas
-    ( someFunc
-    ) where
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+module Yas (runYas) where
 
-someFunc :: IO ()
-someFunc = putStrLn "Yas!!"
+import Import
+
+runYas :: RIO App ()
+runYas = do
+  logInfo "We're inside the application!"
