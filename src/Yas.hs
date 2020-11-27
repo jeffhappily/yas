@@ -1,6 +1,6 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-module Yas (runYas) where
+module Yas
+  ( runYas
+  ) where
 
 import Import
 
